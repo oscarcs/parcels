@@ -11,8 +11,15 @@ export enum ParcelType {
     Small,
     Medium,
     Large,
-    ExtraLarge
+    ExtraLarge,
+    Heavy
 }
+
+const smallWeightLimit = 1;
+const mediumWeightLimit = 3;
+const largeWeightLimit = 6;
+const extraLargeWeightLimit = 10;
+const heavyWeightLimit = 50;
 
 export class ParcelCostCalculator {
     public static calculateOrder(parcels: Parcel[]): ParcelCostOutput {
@@ -20,8 +27,14 @@ export class ParcelCostCalculator {
         let types = new Map<Parcel, ParcelType>();
         
         for (let parcel of parcels) {
-            let type = this.calculateType(parcel);
+            let type = this.calculateBaseType(parcel);
             let cost = this.calculateCost(type, parcel.weight);
+
+            if (cost > 50) {
+                type = ParcelType.Heavy;
+                cost = this.calculateCost(type, parcel.weight); 
+            }
+
             types.set(parcel, type);
             costs.set(parcel, cost);
         }
@@ -37,7 +50,7 @@ export class ParcelCostCalculator {
         };
     }
 
-    public static calculateType(parcel: Parcel): ParcelType {
+    private static calculateBaseType(parcel: Parcel): ParcelType {
         if (parcel.width < 10 && parcel.height < 10 && parcel.depth < 10) {
             return ParcelType.Small;
         }
@@ -53,44 +66,22 @@ export class ParcelCostCalculator {
         return ParcelType.ExtraLarge;
     }
 
-    public static calculateCost(parcelType: ParcelType, weight: number): number {
-        const smallWeightLimit = 1;
-        const mediumWeightLimit = 3;
-        const largeWeightLimit = 6;
-        const extraLargeWeightLimit = 10;
-        
+    private static calculateCost(parcelType: ParcelType, weight: number): number {        
         switch (parcelType) {
             case ParcelType.Small:
-                if (weight < smallWeightLimit) {
-                    return 3;
-                }
-                else {
-                    return 3 + (weight - smallWeightLimit) * 2; 
-                }
+                return 3 + 2 * Math.max(0, weight - smallWeightLimit); 
             
-            case ParcelType.Medium: 
-                if (weight < mediumWeightLimit) {
-                    return 8;
-                }
-                else {
-                    return 8 + (weight - mediumWeightLimit) * 2;
-                }
+            case ParcelType.Medium:
+                return 8 + 2 * Math.max(0, weight - mediumWeightLimit);
             
             case ParcelType.Large:
-                if (weight < largeWeightLimit) {
-                    return 15;
-                }
-                else {
-                    return 15 + (weight - largeWeightLimit) * 2;
-                }
+                return 15 + 2 * Math.max(0, weight - largeWeightLimit);
 
             case ParcelType.ExtraLarge:
-                if (weight < extraLargeWeightLimit) {
-                    return 25;
-                }
-                else {
-                    return 25 + (weight - extraLargeWeightLimit) * 2;
-                }
+                return 25 + 2 * Math.max(0, weight - extraLargeWeightLimit);
+
+            case ParcelType.Heavy:
+                return 50 + 2 * Math.max(0, weight - heavyWeightLimit);
         }
     }
 }
