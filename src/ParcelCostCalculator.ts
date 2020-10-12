@@ -4,6 +4,7 @@ export interface ParcelCostOutput {
     costs: Map<Parcel, number>;
     types: Map<Parcel, ParcelType>;
     total: number;
+    speedyTotal: number;
 }
 
 export enum ParcelType {
@@ -31,7 +32,8 @@ export class ParcelCostCalculator {
         return {
             costs,
             types,
-            total: total
+            total: total,
+            speedyTotal: total * 2
         };
     }
 
