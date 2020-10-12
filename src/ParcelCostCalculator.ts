@@ -22,6 +22,10 @@ const extraLargeWeightLimit = 10;
 const heavyWeightLimit = 50;
 
 export class ParcelCostCalculator {
+    /**
+     * Calculate the cost of an order.
+     * @param parcels An array of parcel objects.
+     */
     public static calculateOrder(parcels: Parcel[]): ParcelCostOutput {
         let costs = new Map<Parcel, number>();
         let types = new Map<Parcel, ParcelType>();
@@ -30,6 +34,7 @@ export class ParcelCostCalculator {
             let type = this.calculateBaseType(parcel);
             let cost = this.calculateCost(type, parcel.weight);
 
+            // Override the type if a heavy parcel type would be cheaper
             if (cost > 50) {
                 type = ParcelType.Heavy;
                 cost = this.calculateCost(type, parcel.weight); 
@@ -39,8 +44,7 @@ export class ParcelCostCalculator {
             costs.set(parcel, cost);
         }
 
-        let total = Array.from(costs.values())
-            .reduce((acc: number, cur: number) => (acc + cur));
+        let total = Array.from(costs.values()).reduce((acc, cur) => (acc + cur));
 
         return {
             costs,
@@ -50,6 +54,10 @@ export class ParcelCostCalculator {
         };
     }
 
+    /**
+     * Calculate the base type (before weight and discount considerations)
+     * @param parcel 
+     */
     private static calculateBaseType(parcel: Parcel): ParcelType {
         if (parcel.width < 10 && parcel.height < 10 && parcel.depth < 10) {
             return ParcelType.Small;
@@ -66,6 +74,11 @@ export class ParcelCostCalculator {
         return ParcelType.ExtraLarge;
     }
 
+    /**
+     * Calculate the cost of an individual parcel.
+     * @param parcelType 
+     * @param weight 
+     */
     private static calculateCost(parcelType: ParcelType, weight: number): number {        
         switch (parcelType) {
             case ParcelType.Small:
