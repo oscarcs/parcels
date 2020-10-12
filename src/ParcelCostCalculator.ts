@@ -21,7 +21,7 @@ export class ParcelCostCalculator {
         
         for (let parcel of parcels) {
             let type = this.calculateType(parcel);
-            let cost = this.calculateCost(type);
+            let cost = this.calculateCost(type, parcel.weight);
             types.set(parcel, type);
             costs.set(parcel, cost);
         }
@@ -53,12 +53,44 @@ export class ParcelCostCalculator {
         return ParcelType.ExtraLarge;
     }
 
-    public static calculateCost(parcelType: ParcelType): number {
+    public static calculateCost(parcelType: ParcelType, weight: number): number {
+        const smallWeightLimit = 1;
+        const mediumWeightLimit = 3;
+        const largeWeightLimit = 6;
+        const extraLargeWeightLimit = 10;
+        
         switch (parcelType) {
-            case ParcelType.Small: return 3;
-            case ParcelType.Medium: return 8;
-            case ParcelType.Large: return 15;
-            case ParcelType.ExtraLarge: return 25;
+            case ParcelType.Small:
+                if (weight < smallWeightLimit) {
+                    return 3;
+                }
+                else {
+                    return 3 + (weight - smallWeightLimit) * 2; 
+                }
+            
+            case ParcelType.Medium: 
+                if (weight < mediumWeightLimit) {
+                    return 8;
+                }
+                else {
+                    return 8 + (weight - mediumWeightLimit) * 2;
+                }
+            
+            case ParcelType.Large:
+                if (weight < largeWeightLimit) {
+                    return 15;
+                }
+                else {
+                    return 15 + (weight - largeWeightLimit) * 2;
+                }
+
+            case ParcelType.ExtraLarge:
+                if (weight < extraLargeWeightLimit) {
+                    return 25;
+                }
+                else {
+                    return 25 + (weight - extraLargeWeightLimit) * 2;
+                }
         }
     }
 }

@@ -1,8 +1,8 @@
 import { Parcel } from "./Parcel";
 import { ParcelCostCalculator, ParcelType } from "./ParcelCostCalculator";
 
-test('A single small parcel', () => {
-    let parcels = [new Parcel(4, 5, 1)];
+test('A single underweight small parcel', () => {
+    let parcels = [new Parcel(4, 5, 1, 0.3)];
     let result = ParcelCostCalculator.calculateOrder(parcels);
 
     expect(result.costs.get(parcels[0])).toBe(3);
@@ -10,8 +10,17 @@ test('A single small parcel', () => {
     expect(result.total).toBe(3);
 });
 
-test('A single medium parcel', () => {
-    let parcels = [new Parcel(9.6, 15, 48)];
+test('A single overweight small parcel', () => {
+    let parcels = [new Parcel(4, 5, 1, 4)];
+    let result = ParcelCostCalculator.calculateOrder(parcels);
+
+    expect(result.costs.get(parcels[0])).toBe(9);
+    expect(result.types.get(parcels[0])).toBe(ParcelType.Small);
+    expect(result.total).toBe(9);
+});
+
+test('A single underweight medium parcel', () => {
+    let parcels = [new Parcel(9.6, 15, 48, 2.1)];
     let result = ParcelCostCalculator.calculateOrder(parcels);
 
     expect(result.costs.get(parcels[0])).toBe(8);
@@ -19,8 +28,17 @@ test('A single medium parcel', () => {
     expect(result.total).toBe(8);
 });
 
-test('A single large parcel', () => {
-    let parcels = [new Parcel(50, 99.8, 10)];
+test('A single overweight medium parcel', () => {
+    let parcels = [new Parcel(9.6, 15, 48, 4)];
+    let result = ParcelCostCalculator.calculateOrder(parcels);
+
+    expect(result.costs.get(parcels[0])).toBe(10);
+    expect(result.types.get(parcels[0])).toBe(ParcelType.Medium);
+    expect(result.total).toBe(10);
+});
+
+test('A single underweight large parcel', () => {
+    let parcels = [new Parcel(50, 99.8, 10, 5.5)];
     let result = ParcelCostCalculator.calculateOrder(parcels);
 
     expect(result.costs.get(parcels[0])).toBe(15);
@@ -28,11 +46,29 @@ test('A single large parcel', () => {
     expect(result.total).toBe(15);
 });
 
-test('A single extra large parcel', () => {
-    let parcels = [new Parcel(50, 99.8, 102)];
+test('A single overweight large parcel', () => {
+    let parcels = [new Parcel(50, 99.8, 10, 10.4)];
+    let result = ParcelCostCalculator.calculateOrder(parcels);
+
+    expect(result.costs.get(parcels[0])).toBe(23.8);
+    expect(result.types.get(parcels[0])).toBe(ParcelType.Large);
+    expect(result.total).toBe(23.8);
+});
+
+test('A single underweight extra large parcel', () => {
+    let parcels = [new Parcel(50, 99.8, 102, 8)];
     let result = ParcelCostCalculator.calculateOrder(parcels);
 
     expect(result.costs.get(parcels[0])).toBe(25);
     expect(result.types.get(parcels[0])).toBe(ParcelType.ExtraLarge);
     expect(result.total).toBe(25);
+});
+
+test('A single overweight extra large parcel', () => {
+    let parcels = [new Parcel(50, 99.8, 102, 11.3)];
+    let result = ParcelCostCalculator.calculateOrder(parcels);
+
+    expect(result.costs.get(parcels[0])).toBe(27.6);
+    expect(result.types.get(parcels[0])).toBe(ParcelType.ExtraLarge);
+    expect(result.total).toBe(27.6);
 });
