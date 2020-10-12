@@ -1,10 +1,14 @@
 import { Parcel } from "./Parcel";
 
-export interface ParcelCostOutput {
-    costs: Map<Parcel, number>;
-    types: Map<Parcel, ParcelType>;
+export interface OrderOutput {
+    outputs: Map<Parcel, ParcelOutput>;
     total: number;
     speedyTotal: number;
+}
+
+export interface ParcelOutput {
+    cost: number;
+    type: ParcelType;
 }
 
 export enum ParcelType {
@@ -26,9 +30,8 @@ export class ParcelCostCalculator {
      * Calculate the cost of an order.
      * @param parcels An array of parcel objects.
      */
-    public static calculateOrder(parcels: Parcel[]): ParcelCostOutput {
-        let costs = new Map<Parcel, number>();
-        let types = new Map<Parcel, ParcelType>();
+    public static calculateOrder(parcels: Parcel[]): OrderOutput {
+        let outputs = new Map<Parcel, ParcelOutput>();
         
         for (let parcel of parcels) {
             let type = this.calculateBaseType(parcel);
@@ -40,16 +43,17 @@ export class ParcelCostCalculator {
                 cost = this.calculateCost(type, parcel.weight); 
             }
 
-            types.set(parcel, type);
-            costs.set(parcel, cost);
+            outputs.set(parcel, { type, cost });
         }
 
-        let total = Array.from(costs.values()).reduce((acc, cur) => (acc + cur));
+        let total = 0;
+        for (let output of outputs.values()) {
+            total += output.cost;
+        }
 
         return {
-            costs,
-            types,
-            total: total,
+            outputs,
+            total,
             speedyTotal: total * 2
         };
     }
