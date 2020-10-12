@@ -15,7 +15,7 @@ export enum ParcelType {
 }
 
 export class ParcelCostCalculator {
-    public static calculate(parcels: Parcel[]): ParcelCostOutput {
+    public static calculateOrder(parcels: Parcel[]): ParcelCostOutput {
         let costs = new Map<Parcel, number>();
         let types = new Map<Parcel, ParcelType>();
         
