@@ -72,3 +72,21 @@ test('A single overweight extra large parcel', () => {
     expect(result.types.get(parcels[0])).toBe(ParcelType.ExtraLarge);
     expect(result.total).toBe(27.6);
 });
+
+test('A heavy parcel', () => {
+    let parcels = [new Parcel(50, 99.8, 102, 30)];
+    let result = ParcelCostCalculator.calculateOrder(parcels);
+
+    expect(result.costs.get(parcels[0])).toBe(50);
+    expect(result.types.get(parcels[0])).toBe(ParcelType.Heavy);
+    expect(result.total).toBe(50);
+});
+
+test('A very heavy parcel', () => {
+    let parcels = [new Parcel(50, 99.8, 102, 51)];
+    let result = ParcelCostCalculator.calculateOrder(parcels);
+
+    expect(result.costs.get(parcels[0])).toBe(51);
+    expect(result.types.get(parcels[0])).toBe(ParcelType.Heavy);
+    expect(result.total).toBe(51);
+});

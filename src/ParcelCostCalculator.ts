@@ -81,7 +81,7 @@ export class ParcelCostCalculator {
                 return 25 + 2 * Math.max(0, weight - extraLargeWeightLimit);
 
             case ParcelType.Heavy:
-                return 50 + 2 * Math.max(0, weight - heavyWeightLimit);
+                return 50 + Math.max(0, weight - heavyWeightLimit);
         }
     }
 }
