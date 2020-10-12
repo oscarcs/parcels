@@ -2,7 +2,7 @@ import { Parcel } from "./Parcel";
 import { ParcelCostCalculator, ParcelType } from "./ParcelCostCalculator";
 
 test('A single small parcel', () => {
-    let parcels = [new Parcel(4, 5, 1)]
+    let parcels = [new Parcel(4, 5, 1)];
     let result = ParcelCostCalculator.calculate(parcels);
 
     expect(result.costs.get(parcels[0])).toBe(3);
@@ -11,7 +11,7 @@ test('A single small parcel', () => {
 });
 
 test('A single medium parcel', () => {
-    let parcels = [new Parcel(9.6, 15, 48)]
+    let parcels = [new Parcel(9.6, 15, 48)];
     let result = ParcelCostCalculator.calculate(parcels);
 
     expect(result.costs.get(parcels[0])).toBe(8);
@@ -20,7 +20,7 @@ test('A single medium parcel', () => {
 });
 
 test('A single large parcel', () => {
-    let parcels = [new Parcel(50, 99.8, 10)]
+    let parcels = [new Parcel(50, 99.8, 10)];
     let result = ParcelCostCalculator.calculate(parcels);
 
     expect(result.costs.get(parcels[0])).toBe(15);
@@ -29,7 +29,7 @@ test('A single large parcel', () => {
 });
 
 test('A single extra large parcel', () => {
-    let parcels = [new Parcel(50, 99.8, 102)]
+    let parcels = [new Parcel(50, 99.8, 102)];
     let result = ParcelCostCalculator.calculate(parcels);
 
     expect(result.costs.get(parcels[0])).toBe(25);
