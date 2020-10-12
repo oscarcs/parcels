@@ -19,22 +19,10 @@ export class ParcelCostCalculator {
         let types = new Map<Parcel, ParcelType>();
         
         for (let parcel of parcels) {
-            if (parcel.width < 10 && parcel.height < 10 && parcel.depth < 10) {
-                costs.set(parcel, 3);
-                types.set(parcel, ParcelType.Small);
-            }
-            else if (parcel.width < 50 && parcel.height < 50 && parcel.depth < 50) {
-                costs.set(parcel, 8);
-                types.set(parcel, ParcelType.Medium);
-            }
-            else if (parcel.width < 100 && parcel.height < 100 && parcel.depth < 100) {
-                costs.set(parcel, 15);
-                types.set(parcel, ParcelType.Large);
-            }
-            else {
-                costs.set(parcel, 25);
-                types.set(parcel, ParcelType.ExtraLarge);
-            }
+            let type = this.calculateType(parcel);
+            let cost = this.calculateCost(type);
+            types.set(parcel, type);
+            costs.set(parcel, cost);
         }
 
         let total = Array.from(costs.values())
@@ -45,5 +33,30 @@ export class ParcelCostCalculator {
             types,
             total: total
         };
+    }
+
+    public static calculateType(parcel: Parcel): ParcelType {
+        if (parcel.width < 10 && parcel.height < 10 && parcel.depth < 10) {
+            return ParcelType.Small;
+        }
+        
+        if (parcel.width < 50 && parcel.height < 50 && parcel.depth < 50) {
+            return ParcelType.Medium;
+        }
+        
+        if (parcel.width < 100 && parcel.height < 100 && parcel.depth < 100) {
+            return ParcelType.Large;
+        }
+        
+        return ParcelType.ExtraLarge;
+    }
+
+    public static calculateCost(parcelType: ParcelType): number {
+        switch (parcelType) {
+            case ParcelType.Small: return 3;
+            case ParcelType.Medium: return 8;
+            case ParcelType.Large: return 15;
+            case ParcelType.ExtraLarge: return 25;
+        }
     }
 }
